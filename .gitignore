@@ -1,0 +1,11 @@
+# Ignore markdown files
+*.md
+
+# Ignore HTML files
+*.html
+
+# Ignore YAML files
+*.yaml
+
+# Ignore JSON files
+*.json
