@@ -2,6 +2,8 @@ import functions.getTranscriptTextFromVidID as getTranscriptTextFromVidID
 import functions.getVidIDSFromPlaylist as getVidIDSFromPlaylist
 import functions.getTitleFromVidID as getTitleFromVidID
 import functions.getPlaylistTitle as getPlaylistTitle
+import json
+
 
 playlistURL = input ("What playlist do you want to parse?")
 filetype = input("What filetype do you want to save it as? Currently supports html and md")
@@ -35,8 +37,6 @@ def createHTML(playlistURL, vidIDs):
 
     print("HTML file created successfully.")
 
-
-
 def createMarkdown(playlistURL, vidIDs):
     md_title = getPlaylistTitle.get_playlist_title(playlistURL) + ".md"
     md_content = "# Full Transcripts from Playlist\n\n"
@@ -49,10 +49,26 @@ def createMarkdown(playlistURL, vidIDs):
         file.write(md_content)
     print("Markdown file created successfully.")
 
+
+def createJSON(playlistURL, vidIDs):
+    json_title = getPlaylistTitle.get_playlist_title(playlistURL) + ".json"
+    data = {}
+    for vidID in vidIDs:
+        title = getTitleFromVidID.get_video_title(vidID)
+        print("Parsing Transcript for " + title)
+        transcript = getTranscriptTextFromVidID.get_transcript(vidID)
+        data[vidID] = {'title': title, 'transcript': transcript}
+    with open(json_title, 'w', encoding='utf-8') as file:
+        json.dump(data, file, indent=4, ensure_ascii=False)
+    print("JSON file created successfully.")
+
+
 if filetype == "html":
     createHTML(playlistURL, vidIDs)
 elif filetype == "md":
     createMarkdown(playlistURL, vidIDs)
+elif filetype == "json":
+    createJSON(playlistURL, vidIDs)
 
 else:
     print("Invalid filetype")
